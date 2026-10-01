@@ -1,0 +1,43 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const posts = await Astro.glob('../../content/blog/*.md');
+  return posts.map(post => ({
+    params: { slug: post.file.split('/').pop().split('.').shift() },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = post;
+---
+
+<Layout title={post.frontmatter.title}>
+  <main class="article-container">
+    <a href="/" class="back-link">&larr; Vissza a főoldalra</a>
+    <div class="meta">
+      <span class={`tag ${post.frontmatter.tagClass}`}>{post.frontmatter.category}</span>
+      <span class="date">{post.frontmatter.pubDate}</span>
+    </div>
+    <h1>{post.frontmatter.title}</h1>
+    <div class="content">
+      <Content />
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .article-container { max-width: 750px; margin: 40px auto; padding: 0 20px; }
+  .back-link { color: var(--accent-sec); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 20px; }
+  .meta { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+  .tag { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+  .tag.ai { background-color: rgba(16, 185, 129, 0.2); color: var(--accent-ai); }
+  .tag.sec { background-color: rgba(6, 182, 212, 0.2); color: var(--accent-sec); }
+  .date { font-family: 'JetBrains Mono', monospace; color: var(--text-muted); font-size: 0.9rem; }
+  h1 { font-size: 2.8rem; font-weight: 800; line-height: 1.2; margin-bottom: 30px; }
+  .content { font-size: 1.1rem; color: #E5E7EB; }
+  .content :global(p) { margin-bottom: 20px; }
+  .content :global(h2) { font-size: 1.8rem; margin: 40px 0 20px 0; color: #FFF; }
+  .content :global(code) { font-family: 'JetBrains Mono', monospace; background: var(--bg-card); padding: 2px 6px; border-radius: 4px; color: var(--accent-sec); font-size: 0.95rem; }
+</style>

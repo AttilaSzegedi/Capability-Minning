@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro';
+const posts = await Astro.glob('../content/blog/*.md');
+const sortedPosts = posts.sort((a, b) => new Date(b.frontmatter.pubDate).getTime() - new Date(a.frontmatter.pubDate).getTime());
+---
+
+<Layout title="Capability Minning- Képesség bányászat Blog">
+    <div class="hero">
+        <h1>Mesterséges Intelligencia & Kiberbiztonság</h1>
+        <p>A jövő technológiái és a jelen fenyegetései professzionális megközelítésben.</p>
+    </div>
+
+    <div class="container">
+        <div class="grid">
+            {sortedPosts.map((post) => (
+                <article class="card">
+                    <div class="card-image">
+                        <span class={`tag ${post.frontmatter.tagClass}`}>{post.frontmatter.category}</span>
+                        {post.frontmatter.emoji}
+                    </div>
+                    <div class="card-content">
+                        <div class="date">{post.frontmatter.pubDate}</div>
+                        <h2 class="card-title">{post.frontmatter.title}</h2>
+                        <p class="card-excerpt">{post.frontmatter.description}</p>
+                        <a href={post.url} class="read-more">Elolvasom Tovább &rarr;</a>
+                    </div>
+                </article>
+            ))}
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .hero { max-width: 800px; margin: 60px auto 40px auto; text-align: center; padding: 0 20px; }
+    .hero h1 { font-size: 3rem; font-weight: 800; letter-spacing: -2px; margin-bottom: 15px; background: linear-gradient(45deg, #fff, #9CA3AF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--text-muted); font-size: 1.1rem; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; margin-top: 40px; }
+    .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; transition: transform 0.3s, border-color 0.3s; display: flex; flex-direction: column; }
+    .card:hover { transform: translateY(-5px); border-color: var(--accent-sec); }
+    .card-image { height: 200px; background: linear-gradient(135deg, #1e293b, #0f172a); display: flex; align-items: center; justify-content: center; font-size: 3rem; position: relative; }
+    .tag { position: absolute; top: 15px; left: 15px; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+    .tag.ai { background-color: rgba(16, 185, 129, 0.2); color: var(--accent-ai); }
+    .tag.sec { background-color: rgba(6, 182, 212, 0.2); color: var(--accent-sec); }
+    .card-content { padding: 25px; display: flex; flex-direction: column; flex-grow: 1; }
+    .date { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; }
+    .card-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; color: var(--text-main); }
+    .card-excerpt { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px; flex-grow: 1; }
+    .read-more { color: var(--text-main); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.3s; }
+    .read-more:hover { color: var(--accent-sec); }
+</style>
